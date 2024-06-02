@@ -1,18 +1,22 @@
 const container = document.getElementById("container");
 const indicator = document.getElementById("indicator");
 const resetButton = document.getElementById("reset");
-// false = X, true = O
+// false = X, True = O
 let Switch = false;
 const X = "X";
 const O = "O";
-let gameOver = false; // Flag to track if the game is over
+let gameOver = false; 
 indicator.textContent = "Player X's turn";
+createGrid(3, 3);
 // Event listener for clicks on the container
 container.addEventListener('click', function() {
-    if (!gameOver) { // Check if the game is over
+    if (!gameOver) { 
         switchValue();
         const winner = checkWin();
-        if (winner) {
+        if (winner === null && isDraw()) {
+            indicator.textContent = `Draw!`;
+            gameOver = true;
+        } else if (winner) {
             gameOver = true;
             indicator.textContent = `Player ${winner} wins!`;
         }
@@ -38,7 +42,7 @@ function createGrid(rows, cols) {
 // Function to handle switching between X and O
 function switchValue() {
     if (!event.target.classList.contains('grid-item') || event.target.textContent) {
-        return; // Exit the function if the clicked element is not a grid item or already contains text
+        return; 
     }
     Switch = !Switch;
     console.log("Switch Value: " + Switch);
@@ -76,21 +80,28 @@ function checkWin() {
         }
     }
 
-    return null; // Return null if no winner
+    return null; 
 }
 
 // Function to reset the game
 function reset() {
     const gridItems = document.querySelectorAll('.grid-item');
-    indicator.textContent = "Player X's turn"; // Reset indicator to default
-    gameOver = false; // Reset game over flag
+    indicator.textContent = "Player X's turn"; 
+    gameOver = false; 
 
     gridItems.forEach(item => {
-        item.textContent = ''; // Clear text content of each grid item
+        item.textContent = '';
     });
 
-    Switch = false; // Reset switch to X's turn
+    Switch = false;
+}
+function isDraw() {
+    const gridItems = document.querySelectorAll('.grid-item');
+    for (let item of gridItems) {
+        if (!item.textContent) {
+            return false; 
+        }
+    }
+    return true; 
 }
 
-// Initialize the game with a 3x3 grid
-createGrid(3, 3);
